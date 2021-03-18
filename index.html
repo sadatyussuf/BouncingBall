@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boucing Ball With Input</title>
+
+
+    <style>
+        form {
+            width: 330px;
+            margin: 20px;
+            background-color: brown;
+            padding: 2opx;
+        }
+
+        input:valid {background: green;}
+        input :invalid {background: red;}
+    </style>
+
+    <script type="text/javascript">
+        
+        var boxx = 20; //x location of upper corner of box
+        var boxy = 30; // y location of upper corner of box
+        var boxwidth = 350;
+        var boxheight = 250;
+        var ballrad = 10;
+        var boxboundx = boxwidth+boxx-ballrad; //right boundary
+        var boxboundy = boxheight+boxy-ballrad; //bottom boundary
+        var inboxboundx = boxx+ballrad; //left boundary
+        var inboxboundy = boxy+ballrad; // top boundary
+        var ballx = 50; //initial x position of ball
+        var bally = 60; // initial y position of ball
+        var ctx;
+        var ballvx = 4; //initial vertical displacement
+        var ballvy = 8; //initial horizontal displacement
+        
+        function init() {
+            ctx = document.getElementById('canvas').getContext('2d');
+            ctx.linewidth = ballrad;
+            ctx.fillStyle = "rgb(200,0,50)";
+            moveball();
+            setInterval(moveball,100);
+        }
+
+        function moveball(){
+            ctx.clearRect(boxx,boxy,boxwidth,boxheight);
+            moveandcheck();
+            ctx.beginPath();
+            ctx.arc(ballx,bally,ballrad,0,Math.PI*2,true);
+            ctx.fill(); //fill circle with color
+            ctx.strokeRect(boxx,boxy,boxwidth,boxheight); //draw a rectangle outline
+        }
+
+        function moveandcheck(){
+            var nballx = ballx + ballvx; // set next x position
+            var nbally = bally + ballvy; // set next y position
+            if (nballx > boxboundx){
+                ballvx =-ballvx;
+                nballx = boxboundx; 
+            }
+            if (nballx < inboxboundx){
+                nballx = inboxboundx;
+                ballvx =-ballvx;
+            }
+            if (nbally > boxboundy){
+                nbally = boxboundy;
+                ballvy =-ballvy;
+            }
+            if (nbally < inboxboundy){
+                nbally = inboxboundy;
+                ballvy =-ballvy;
+            }
+            ballx = nballx;
+            bally = nbally;
+        }
+
+        function change(){
+            ballvx = Number(f.hv.value);
+            ballvy = Number(f.vv.value);
+            return false
+        }
+        </script> 
+
+
+
+</head>
+<body  onLoad="init();">
+    <canvas id="canvas" width="400" height="300" style="border: 1px dotted red;">Your browser doesn't support the HTML5 element canvas.</canvas>
+
+    <br/>
+
+    <form name="f" id="f" onsubmit="return change();">
+        Horizontal velocity <input name="hv" id="hv" value="4" type="number" min="-10" max="10"/>
+
+        <br/>
+
+        Vertical velocity <input name="vv" id="vv" value="8" type="number" min="-10" max="10"/>
+
+        <input type="submit" value="CHANGE"/>
+
+        </form>
+    
+</body>
+</html>
